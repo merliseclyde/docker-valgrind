@@ -3,18 +3,7 @@
 
 ## Preliminary step - Install Docker
 
-##  Get R-devel (or update)
 
-```
-docker pull rocker/r-devel
-```
-
-Check the version of `R`
-```
-docker run -ti r-devel bash
-
-> RD --version
-```
 
 ## Build the Docker Container 
 
@@ -45,6 +34,14 @@ If not running in the BAS dir (/work) grab the package from github (may need to 
 ```
 git clone https://github.com/merliseclyde/BAS
 ```
+
+## Check the version of `R` to make sure that the image does have the current R-devel
+
+```
+RD --version
+```
+
+
 
 Now build BAS and check it as-cran.  Note we need to replace R with RD an alias for R-devel.
 
