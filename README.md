@@ -3,7 +3,7 @@
 
 ## Preliminary step - Install Docker
 
-
+(make sure that the docker daemon is running)
 
 ## Build the Docker Container 
 
