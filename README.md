@@ -12,20 +12,20 @@ We will add to the r-devel image valgrind, gcc-9, gfortran-9 and libraries for t
 We'll tag the container as r-devel-valgrind
 
 ```
-docker build -t r-devel-valgrind .
+docker build -t r-debug-valgrind .
 ```
 
 ## Start up the container to run interactively
 
 
 ```
-docker run -it r-devel-valgrind bash
+docker run -it r-debug-valgrind bash
 ```
 or attach the local directory where the package lives (See http://dirk.eddelbuettel.com/blog/2019/08/05/#023_rocker_debug_example) so that the source package is available.
 
 ```
 cd ~/
-docker run --rm -ti -v ${PWD}:/work -w /work r-devel-valgrind bash
+docker run --rm  -ti -v ${PWD}:/work -w /work r-debug-valgrind bash
 ```
 to allow the files in the package directory to be accessible in the directory /work without using the git clone step below.  This is useful if you are fixing bugs locally and are not ready to push local changes to github.  You can edit local files within the container without having to exit and start back up, but may want to add your favorite editor [emacs]( to the Docker container ahead of time.
 
@@ -46,17 +46,18 @@ RD --version
 If not attaching the local directory with the source package (/work), grab the package from github. in this case I am using a branch
 
 ```
-git clone --single-branch --branch interactions https://github.com/merliseclyde/BAS
+git clone --single-branch --branch devel https://github.com/merliseclyde/BAS
 ```
 
 Now build BAS and check it as-cran.  Note we need to replace R with RD an alias for R-devel.
 
 ```
-RD CMD build BAS
-
-RD CMD check --as-cran --use-valgrind BAS_1.5.4.tar.gz
-RD CMD INSTALL --dsym  BAS_1.5.4.tar.gz
-RD -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes  --log-fd=1 --log-file=BAS.Rcheck/BAS-valgrind.txt" --vanilla < BAS.Rcheck/BAS-Ex.R
+RDvalgrind  CMD build BAS
+# following needed on ubuntu 
+ulimit 4096
+RDvalgrind CMD check --use-valgrind BAS_1.6.6.9000.tar.gz
+RDvalgrind  CMD INSTALL --dsym  BAS_1.6.6.9000.tar.gz
+RDvalgrind -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes  --log-fd=1 --log-file=BAS.Rcheck/BAS-valgrind.txt" --vanilla < BAS.Rcheck/BAS-Ex.R
 ```
 
 Have fun debugging!

@@ -5,8 +5,11 @@ FROM wch1/r-debug
 
 MAINTAINER "Merlise Clyde" clyde@duke.edu
 
-RUN . /etc/environment \
-     && RDvalgrind -q -e 'install.packages(c("roxygen2", "knitr", "MASS","rmarkdown","dplyr", "ggplot2","GGally","glmbb", "pkgdown", "testthat", "covr"))' \
+RUN  apt-get update && apt-get install -y \
+     cmake  
+
+RUN  . /etc/environment \
+     && RDvalgrind -q -e 'install.packages(c("roxygen2", "knitr", "MASS","rmarkdown","dplyr", "ggplot2","GGally","glmbb", "pkgdown", "testthat", "covr", "faraway"))' \
      && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 
