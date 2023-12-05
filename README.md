@@ -3,7 +3,7 @@
 
 ## Preliminary step - Install Docker
 
-
+(make sure that the docker daemon is running)
 
 ## Build the Docker Container 
 
@@ -12,46 +12,52 @@ We will add to the r-devel image valgrind, gcc-9, gfortran-9 and libraries for t
 We'll tag the container as r-devel-valgrind
 
 ```
-docker build -t r-devel-valgrind .
+docker build -t r-debug-valgrind .
 ```
 
 ## Start up the container to run interactively
 
 
 ```
-docker run -it r-devel-valgrind bash
+docker run -it r-debug-valgrind bash
 ```
-or attach the local package directory (See http://dirk.eddelbuettel.com/blog/2019/08/05/#023_rocker_debug_example) so that the source package is available.
+or attach the local directory where the package lives (See http://dirk.eddelbuettel.com/blog/2019/08/05/#023_rocker_debug_example) so that the source package is available.
 
 ```
-cd ~/BAS-github
-docker run --rm -ti -v ${PWD}:/work -w /work r-devel-valgrind bash
+cd ~/
+docker run --rm  -ti -v ${PWD}:/work -w /work r-debug-valgrind bash
 ```
-(this allows the files in the package directory to be accessible in the directory /work without using the git clone step below and useful if you are fixing bugs and do not want to push local changes to github.  You can edit local files within the container without having to exit and start back up.
+to allow the files in the package directory to be accessible in the directory /work without using the git clone step below.  This is useful if you are fixing bugs locally and are not ready to push local changes to github.  You can edit local files within the container without having to exit and start back up, but may want to add your favorite editor [emacs]( to the Docker container ahead of time.
 
-If not running in the BAS dir (/work) grab the package from github (may need to replace with branch)
 
-```
-git clone https://github.com/merliseclyde/BAS
-```
 
-## Check the version of `R` to make sure that the image does have the current R-devel
+## Check Versions 
+ 
+Before building and checking the package, it is helpful to check the version of `R` and the compliler to make sure that the image does have the current versions that CRAN is expecting (see https://cran.r-project.org/web/checks/check_flavors.html).  At the time of this writing,  gcc-9 and gfortran-9 on Debian
 
 ```
+gcc --version
+gfortan --version
 RD --version
 ```
 
+## Building and checking the package
+## 
+If not attaching the local directory with the source package (/work), grab the package from github. in this case I am using a branch
 
+```
+git clone --single-branch --branch devel https://github.com/merliseclyde/BAS
+```
 
 Now build BAS and check it as-cran.  Note we need to replace R with RD an alias for R-devel.
 
 ```
-cd ..
-RD CMD build BAS
-
-RD CMD check --as-cran --use-valgrind BAS_1.5.4.tar.gz
-RD CMD INSTALL --dsym  BAS_1.5.4.tar.gz
-RD -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes  --log-fd=1 --log-file=BAS.Rcheck/BAS-valgrind.txt" --vanilla < BAS.Rcheck/BAS-Ex.R
+RDvalgrind  CMD build BAS
+# following needed on ubuntu 
+ulimit 4096
+RDvalgrind CMD check --use-valgrind BAS_1.6.6.9000.tar.gz
+RDvalgrind  CMD INSTALL --dsym  BAS_1.6.6.9000.tar.gz
+RDvalgrind -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes  --log-fd=1 --log-file=BAS.Rcheck/BAS-valgrind.txt" --vanilla < BAS.Rcheck/BAS-Ex.R
 ```
 
 Have fun debugging!
