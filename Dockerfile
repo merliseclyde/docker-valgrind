@@ -3,7 +3,7 @@
 # docker pull wch1/r-debug
 FROM wch1/r-debug
 
-MAINTAINER "Merlise Clyde" clyde@duke.edu
+LABEL org.opencontainers.image.authors="clyde@duke.edu"
 
 RUN  apt-get update && apt-get install -y \
      cmake  
@@ -15,4 +15,4 @@ RUN  . /etc/environment \
 
 ## httr authentication uses this port
 EXPOSE 1410
-ENV HTTR_LOCALHOST 0.0.0.0
+ENV HTTR_LOCALHOST=0.0.0.0
