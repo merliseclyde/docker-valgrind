@@ -61,7 +61,7 @@ RDvalgrind CMD check --use-valgrind BAS_2.0.1.tar.gz
 RDvalgrind  CMD INSTALL --dsym  BAS_2.0.1.tar.gz
 RDvalgrind -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes  --log-fd=1 --log-file=BAS.Rcheck/BAS-valgrind.txt" --vanilla < BAS.Rcheck/BAS-Ex.R
 cd BAS.Rcheck/tests; 
-RDvalgrind -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes  --log-fd=1 --log-file=BAS-valgrind-tests.txt" --vanilla < testthat.R
+RDvalgrind -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes --with-valgrind-instrumentation=2 --log-fd=1 --log-file=BAS-valgrind-tests.txt" --vanilla < testthat.R
 ```
 
 Have fun debugging!
