@@ -15,6 +15,10 @@ we need 'buildx build --platform=linux/amd64' to build on a Mac M1/M3
 ```
 docker buildx build --platform=linux/amd64 -t r-debug-valgrind .
 ```
+or on crunch (no platform specification needed)
+```
+docker buildx build  -t merliseclyde/r-debug-valgrind .
+```
 
 ## Start up the container to run interactively
 
@@ -22,6 +26,12 @@ docker buildx build --platform=linux/amd64 -t r-debug-valgrind .
 ```
 docker run -it --platform linux/amd64 r-debug-valgrind bash
 ```
+
+On crunch: 
+```
+docker run -it  r-debug-valgrind bash
+```
+
 or attach the local directory where the package lives (See http://dirk.eddelbuettel.com/blog/2019/08/05/#023_rocker_debug_example) so that the source package is available.
 
 ```
