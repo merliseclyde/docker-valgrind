@@ -1,7 +1,7 @@
 #FROM docker.io/rocker/r-devel
 # docker pull rocker/r-devel
 # docker pull wch1/r-debug
-FROM wch1/r-debug
+FROM merliseclyde/r-debug
 
 LABEL org.opencontainers.image.authors="clyde@duke.edu"
 
